@@ -22,49 +22,137 @@ class Tree {
 	   return root;
     }    
 	
-	public Node delete(Node root, int val) {
-		if (root.val == val) {
-			Node successor = null, predecessor = null;
-			
-			
+	public Node deleteNode(Node root, int val) {
+		if (root == null) {
+			return root;
 		}
-		return null;
+		
+		if (root.val == val) {
+			Node successor = null, predecessor = null, parent = null;
+			if (root.left == null && root.right == null) {
+				root = null;
+			} else if (root.right != null) {
+				successor = root.right;
+				while (successor.left != null) {
+					parent = successor;
+					successor = successor.left;
+				}
+				Node left, right;
+				if (root.right == successor) {
+					right = null;
+				} else {
+					right = root.right;
+				}
+				
+				if (parent != null) {
+					parent.left = null;
+				}
+				
+				left = root.left;
+				root = successor;
+				successor = null;
+				root.left = left;
+				root.right = right;
+				
+			} else {
+				predecessor = root.left;
+				while (predecessor.right != null) {
+					parent = predecessor;
+					predecessor = predecessor.right;
+				}
+				Node left, right;
+				if (predecessor == root.left) {
+					left = null;
+				} else {
+					left = root.left;
+				}
+				
+				if (parent != null) {
+					parent.right = null;
+				}
+				
+				right = root.right;
+				root = predecessor;
+				root.left = left;
+				root.right = right;
+				predecessor = null;
+			}
+		} else if (val > root.val) {
+            root.right = deleteNode(root.right, val);
+        } else if (val <= root.val) {
+			root.left = deleteNode(root.left, val);
+		}
+		
+		return root;
 	}
     // Traverse a tree given with its root
-    public void traverse(Node root){
+    public void inorder(Node root){
         if(root == null) {
             return;
         }
-        traverse(root.left);
+        inorder(root.left);
         System.out.print(root.val + " -> ");
-        traverse(root.right);
+        inorder(root.right);
     }
 	
 	public void levelTraverse(Node root){
-        //Queue<Node> Q = new Queue
+        Queue<Node> Q = new LinkedList<Node>();
+		Q.add(root);
+		
+		while (Q.isEmpty() == false) {
+			int N = Q.size();
+			
+			for (int i = 0; i < N; i++) {
+				Node node = Q.peek();
+				Q.remove();
+				System.out.print(node.val + " ");
+				if (node.left != null) {
+					Q.add(node.left);
+				}
+				
+				if (node.right != null) {
+					Q.add(node.right);
+				}
+			}
+			System.out.println();
+		}
     }
 
     public static void main(String[] args) {
 		Tree tree = new Tree(); 
         Node root = null;
         root = tree.insert(root, 10);
-        root = tree.insert(root, 1);
+        root = tree.insert(root, 7);
         root = tree.insert(root, 12);
         root = tree.insert(root, 11);
-        root = tree.insert(root, 10);
+        root = tree.insert(root, 14);
+        root = tree.insert(root, 13);
+        root = tree.insert(root, 15);
         root = tree.insert(root, 9);
         root = tree.insert(root, 8);
-        root = tree.insert(root, 7);
+        root = tree.insert(root, 10);
         root = tree.insert(root, 6);
-        root = tree.insert(root, 14);
-        root = tree.insert(root, 2);
-        root = tree.insert(root, 3);
-        root = tree.insert(root, 4);
         root = tree.insert(root, 5);
-	    root = tree.insert(root, 13);
+		root = tree.insert(root, 16);
+		root = tree.insert(root, 4);
+		root = tree.insert(root, 12);
 
         // Traverse the tree
-        System.out.println("Tree before sorting is:");
-        tree.traverse(root);
+        System.out.println("Tree inorder traversal before deletion is:");
+		tree.inorder(root);
+		System.out.println("\nTree level traversal before deletion is:");
+        tree.levelTraverse(root);
+		
+		root = tree.deleteNode(root, 16);
+		System.out.println("Tree inorder traversal after deletion "+16+" is:");
+        tree.inorder(root);
+		System.out.println("\nTree level traversal after deletion is:");
+        tree.levelTraverse(root);
+		
+		root = tree.deleteNode(root, 10);
+		System.out.println("Tree inorder traversal after deletion "+10+" is:");
+        tree.inorder(root);
+		System.out.println("\nTree level traversal after deletion is:");
+        tree.levelTraverse(root);
     }
 }
