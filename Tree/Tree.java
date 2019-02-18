@@ -23,7 +23,7 @@ class Tree {
     }    
 	
 	public Node deleteNode(Node root, int val) {
-		if (root == null) {
+        if (root == null) {
 			return root;
 		}
 		
@@ -39,18 +39,17 @@ class Tree {
 				}
 				Node left, right;
 				if (root.right == successor) {
-					right = null;
+					right = successor.right;
 				} else {
 					right = root.right;
 				}
 				
 				if (parent != null) {
-					parent.left = null;
+					parent.left =  deleteNode(parent.left, successor.val);;
 				}
 				
 				left = root.left;
 				root = successor;
-				successor = null;
 				root.left = left;
 				root.right = right;
 				
@@ -62,27 +61,25 @@ class Tree {
 				}
 				Node left, right;
 				if (predecessor == root.left) {
-					left = null;
+					left = predecessor.left;
 				} else {
 					left = root.left;
 				}
 				
 				if (parent != null) {
-					parent.right = null;
+					parent.right = deleteNode(parent.right, predecessor.val);
 				}
 				
 				right = root.right;
 				root = predecessor;
 				root.left = left;
 				root.right = right;
-				predecessor = null;
 			}
 		} else if (val > root.val) {
             root.right = deleteNode(root.right, val);
         } else if (val <= root.val) {
 			root.left = deleteNode(root.left, val);
 		}
-		
 		return root;
 	}
     // Traverse a tree given with its root
