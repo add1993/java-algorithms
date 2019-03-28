@@ -1,0 +1,5 @@
+Use javac to compile the java code.
+
+Commands :
+javac ShortestPath.java
+java ShortestPath
