@@ -7,7 +7,7 @@ class HashTable {
 	private int maxCapacity;
 	private int collisions;
 	private int maxIterations;
-	private float loadFactor;
+	private double loadFactor;
 	private String[] keys;
 	private String[] values;
 
@@ -16,7 +16,7 @@ class HashTable {
 		maxCapacity = capacity;
 		loadFactor = 0.5;
 		collisions = 0;
-		maxIterations = 15;
+		maxIterations = 50;
 		keys = new String[capacity];
 		values = new String[capacity];
 	}
@@ -30,7 +30,7 @@ class HashTable {
 	}
 	
 	public boolean isFull() {
-		float load = (float)currentCapacity/maxCapacity;
+		double load = (double)currentCapacity/maxCapacity;
 		if (load >= loadFactor) {
 			return true;
 		}
@@ -66,24 +66,26 @@ class HashTable {
 		currentCapacity = 0;
 		for (int i = 0; i < oldKeys.length; i++) {
 			if (oldKeys[i] != null) {
-				insertUtil(oldKeys[i], values[i]);
+				insert(oldKeys[i], oldValues[i]);
 			}
 		}
 	}
 	
-	public void insertUtil(String key, String value) {
+	public void insert(String key, String value) {
 		if (this.isFull()) {
 			maxCapacity = 2 * maxCapacity;
 			maxCapacity = getNextPrime(maxCapacity);
+			System.out.println("Load limit reached. Increasing the size of Hashtable to "+ maxCapacity);
 			resizeHashTable(maxCapacity);
+			System.out.println("HashTable resized");
 		}
-		insert(key, value)
+		insertUtil(key, value);
 	}
 	
-	public void insert(String key, String value) {
+	public void insertUtil(String key, String value) {
 		int pos = hash(key), index = 0;
-
-		while (1) {
+		System.out.println("Inserting (Key, Value) = (" + key + ", " + value + ")");
+		while (true) {
 			pos = (pos + index*index) % maxCapacity;
 			if (keys[pos] == null) {
 				keys[pos] = key;
@@ -91,6 +93,7 @@ class HashTable {
 				currentCapacity++;
 				return;
 			}
+			System.out.println("Collision detected at position " + pos + " . Checking next position.");
 			index++;
 			collisions++;
 		}
@@ -112,12 +115,21 @@ class HashTable {
 	public void printHashTable() {
 		for (int i = 0; i < keys.length; i++) {
 			if (keys[i] != null) {
-				System.out.println(keys[i] + " => " + values[i]);
+				System.out.println("(" +keys[i] + ", " + values[i]+")");
 			}
 		}
 	}
 	
-	public static void main() {
+	public static void main(String[] args) {
+		HashTable table = new HashTable(31);
+		String[] values = {"abc", "def", "bac", "ghi", "jkl", "mno", "efd", "abcde", "efghi", "pqrs", "jdbc", "mcbc", "kill", "llik", "xyz", "uvwx", "mnop", "igh", "abcdefghi", "tarye", "mon"};
 		
+		for (int i = 0; i < values.length; i++) {
+			table.insert(values[i], Integer.toString(i));
+		}
+		
+		System.out.println("Printing the Hashtable");
+		table.printHashTable();
+		System.out.println("Total number of collisions encountered : "+table.getCollisions());
 	}
 }
