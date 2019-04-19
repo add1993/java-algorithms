@@ -75,7 +75,7 @@ class HashTable {
 		if (this.isFull()) {
 			maxCapacity = 2 * maxCapacity;
 			maxCapacity = getNextPrime(maxCapacity);
-			System.out.println("Load limit reached. Increasing the size of Hashtable to "+ maxCapacity);
+			System.out.println("Load limit reached. Increasing the size of Hashtable to : "+ maxCapacity);
 			resizeHashTable(maxCapacity);
 			System.out.println("HashTable resized");
 		}
@@ -122,14 +122,14 @@ class HashTable {
 	
 	public static void main(String[] args) {
 		HashTable table = new HashTable(31);
-		String[] values = {"abc", "def", "bac", "ghi", "jkl", "mno", "efd", "abcde", "efghi", "pqrs", "jdbc", "mcbc", "kill", "llik", "xyz", "uvwx", "mnop", "igh", "abcdefghi", "tarye", "mon"};
+		String[] keys = {"abc", "def", "bac", "GHI", "jkl", "mno", "efd", " abcde", "efghi", "pqrs", "jdbc", "mcbc", "kill", "llik", "xyz", "uvwx", "mnop", "igh", "abcdefghi", "tarye"};
 		
-		for (int i = 0; i < values.length; i++) {
-			table.insert(values[i], Integer.toString(i));
+		for (int i = 0; i < keys.length; i++) {
+			table.insert(keys[i], Integer.toString(i));
 		}
 		
-		System.out.println("Printing the Hashtable");
+		System.out.println("Printing the Hashtable after insertions");
 		table.printHashTable();
-		System.out.println("Total number of collisions encountered : "+table.getCollisions());
+		System.out.println("Total number of collisions encountered : " + table.getCollisions());
 	}
 }
